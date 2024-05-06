@@ -4,11 +4,9 @@ import { PropsWithChildren, useCallback, useEffect, useState } from 'react'
 
 import { Toaster } from 'react-hot-toast'
 
-import { TooltipProvider } from '@janhq/uikit'
-
+import Loader from '@/containers/Loader'
 import EventListenerWrapper from '@/containers/Providers/EventListener'
 import JotaiWrapper from '@/containers/Providers/Jotai'
-import ThemeWrapper from '@/containers/Providers/Theme'
 
 import { setupCoreServices } from '@/services/coreService'
 import {
@@ -17,8 +15,6 @@ import {
 } from '@/services/extensionService'
 
 import Umami from '@/utils/umami'
-
-import Loader from '../Loader'
 
 import DataLoader from './DataLoader'
 
@@ -71,20 +67,16 @@ const Providers = ({ children }: PropsWithChildren) => {
 
   return (
     <JotaiWrapper>
-      <ThemeWrapper>
-        <Umami />
-        {settingUp && <Loader description="Preparing Update..." />}
-        {setupCore && activated && (
-          <KeyListener>
-            <EventListenerWrapper>
-              <TooltipProvider delayDuration={0}>
-                <DataLoader>{children}</DataLoader>
-              </TooltipProvider>
-            </EventListenerWrapper>
-            <Toaster />
-          </KeyListener>
-        )}
-      </ThemeWrapper>
+      <Umami />
+      {settingUp && <Loader description="Preparing Update..." />}
+      {setupCore && activated && (
+        <KeyListener>
+          <EventListenerWrapper>
+            <DataLoader>{children}</DataLoader>
+          </EventListenerWrapper>
+          <Toaster />
+        </KeyListener>
+      )}
     </JotaiWrapper>
   )
 }

@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, nativeTheme } from 'electron'
 
 import { join } from 'path'
 /**
@@ -78,6 +78,8 @@ app
 app.on('second-instance', (_event, _commandLine, _workingDirectory) => {
   windowManager.showMainWindow()
 })
+
+nativeTheme.themeSource === 'dark'
 
 app.on('before-quit', function (evt) {
   trayManager.destroyCurrentTray()
