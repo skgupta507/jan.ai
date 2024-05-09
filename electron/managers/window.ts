@@ -123,6 +123,10 @@ class WindowManager {
     )
   }
 
+  sendMainAppDeepLink(url: string): void {
+    this.mainWindow?.webContents.send(AppEvent.onDeepLink, url)
+  }
+
   cleanUp(): void {
     if (!this.mainWindow?.isDestroyed()) {
       this.mainWindow?.close()

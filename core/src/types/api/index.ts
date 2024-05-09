@@ -45,6 +45,8 @@ export enum AppEvent {
 
   onUserSubmitQuickAsk = 'onUserSubmitQuickAsk',
   onSelectedText = 'onSelectedText',
+
+  onDeepLink = 'onDeepLink',
 }
 
 export enum DownloadRoute {

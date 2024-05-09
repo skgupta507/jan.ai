@@ -1,6 +1,6 @@
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, dialog, shell } from 'electron'
 
-import { join } from 'path'
+import { join, resolve } from 'path'
 /**
  * Managers
  **/
@@ -39,6 +39,21 @@ const quickAskUrl = `${mainUrl}/search`
 
 const gotTheLock = app.requestSingleInstanceLock()
 
+if (process.defaultApp) {
+  if (process.argv.length >= 2) {
+    app.setAsDefaultProtocolClient('jan', process.execPath, [
+      resolve(process.argv[1]),
+    ])
+  }
+} else {
+  app.setAsDefaultProtocolClient('jan')
+}
+
+const createMainWindow = () => {
+  const startUrl = app.isPackaged ? `file://${mainPath}` : mainUrl
+  windowManager.createMainWindow(preloadPath, startUrl)
+}
+
 app
   .whenReady()
   .then(() => {
@@ -73,6 +88,10 @@ app
         windowManager.showMainWindow()
       }
     })
+
+    app.on('open-url', (_event, url) => {
+      windowManager.sendMainAppDeepLink(url)
+    })
   })
 
 app.on('second-instance', (_event, _commandLine, _workingDirectory) => {
@@ -102,11 +121,6 @@ function createQuickAskWindow() {
   if (!getAppConfigurations().quick_ask) return
   const startUrl = app.isPackaged ? `file://${quickAskPath}` : quickAskUrl
   windowManager.createQuickAskWindow(preloadPath, startUrl)
-}
-
-function createMainWindow() {
-  const startUrl = app.isPackaged ? `file://${mainPath}` : mainUrl
-  windowManager.createMainWindow(preloadPath, startUrl)
 }
 
 /**
